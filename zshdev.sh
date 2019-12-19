@@ -105,6 +105,7 @@ echo ---------- software installed ----------
 echo `brew --version`
 echo `git --version`
 echo `python3 --version`
-echo node `node --version`
+echo nvm `nvm --version`
 echo npm `npm --version`
+echo node `node --version`
 echo `java -version`
