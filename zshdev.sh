@@ -82,8 +82,9 @@ PATH=$PATH:$MAVEN_HOME/bin; export PATH;
 # ============================================================
 # nvm (brew install nvm; mkdir `/.nvm)
 # ============================================================
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
 # ============================================================
@@ -101,8 +102,9 @@ echo $fg_bold[blue] "gpd     $reset_color 'git push --dry-run'"
 echo $fg_bold[blue] "gpsup   $reset_color 'git push --set-upstream origin <git_current_branch>'"
 echo $fg_bold[blue] "gpu     $reset_color 'git push upstream'"
 echo ---------- software installed ----------
+echo `brew --version`
 echo `git --version`
-echo `python -version`
-echo `node --version`
-echo `npm --version`
+echo `python3 --version`
+echo node `node --version`
+echo npm `npm --version`
 echo `java -version`
