@@ -1,5 +1,7 @@
 #!/bin/zsh
 echo Running Developer Profile
+SCRIPTDIR=${0%/*}
+echo from $fg_bold[blue] $SCRIPTDIR $reset_color
 
 # shell variables (these were added to help running cassandra locally long back)
 # ulimit -n 4096
@@ -42,6 +44,7 @@ alias bton="sudo kextload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBT
 TMP=/tmp; export TMP
 TMPDIR=$TMP; export TMPDIR
 APPS=~/Coding/apps
+PATH=$PATH:~/Coding/github/devex/bin; export PATH;
 
 # ============================================================
 # Java
@@ -61,36 +64,20 @@ JAVA_HOME=$APPS/java; export JAVA_HOME;
 PATH=$PATH:$JAVA_HOME/bin; export PATH;
 
 # ============================================================
-# Ant
-# ============================================================
-ANT_HOME=$APPS/ant; export ANT_HOME;
-PATH=$PATH:$ANT_HOME/bin; export PATH;
-
-# ============================================================
-# Maven
-# ============================================================
-MAVEN_HOME=$APPS/maven; export MAVEN_HOME;
-M2_HOME=$MAVEN_HOME
-PATH=$PATH:$MAVEN_HOME/bin; export PATH;
-
-# ============================================================
+# Ant (brew install ant - /usr/local/bin/ant)
+# Maven (brew install maven - /usr/local/bin/mvn)
 # Gradle (brew install gradle - /usr/local/bin/gradle)
+# nvm (brew install nvm; mkdir ~/.nvm)
 # ============================================================
-# GRADLE_HOME=$APPS/gradle; export GRADLE_HOME;
-# PATH=$PATH:$GRADLE_HOME/bin; export PATH;
-
-# ============================================================
-# nvm (brew install nvm; mkdir `/.nvm)
-# ============================================================
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
 
 
 # ============================================================
 # Tips & Reminders
 # ============================================================
 
+echo
 echo ---------- coding tips ----------
 echo $fg_bold[blue] "gss/gsb $reset_color 'git status'"
 echo $fg_bold[blue] "gaa     $reset_color 'git add --all'"
@@ -101,11 +88,12 @@ echo $fg_bold[blue] "    fix:$reset_color minor typos in code, fixes issue #12"
 echo $fg_bold[blue] "gpd     $reset_color 'git push --dry-run'"
 echo $fg_bold[blue] "gpsup   $reset_color 'git push --set-upstream origin <git_current_branch>'"
 echo $fg_bold[blue] "gpu     $reset_color 'git push upstream'"
+echo
 echo ---------- software installed ----------
-echo `brew --version`
-echo `git --version`
-echo `python3 --version`
 echo nvm `nvm --version`
 echo npm `npm --version`
 echo node `node --version`
+echo `python3 --version`
+echo `brew --version`
+echo `git --version`
 echo `java -version`
