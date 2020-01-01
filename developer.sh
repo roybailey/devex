@@ -1,5 +1,5 @@
 #!/bin/bash
-echo Running Developer Profile
+echo Running Developer Profile (DEPRECATED - replaced with zshdev.sh)
 
 # shell variables
 PS1="\w > "
