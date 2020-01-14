@@ -73,6 +73,11 @@ export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
 
 
+# To find out more visit: https://gulpjs.com/
+# npm install gulp-cli -g
+# npm install gulp -D
+
+
 # ============================================================
 # Tips & Reminders
 # ============================================================
