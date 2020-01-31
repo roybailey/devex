@@ -38,6 +38,10 @@ alias npm-global-ls="echo npm -g ls --depth 0; npm -g ls --depth 0"
 alias npm-tape="echo npm run tape; npm run tape"
 alias babel-tape="echo tape -r babel-register; tape -r babel-register"
 
+alias dc-up="docker-compose up"
+alias k8-pods="kubectl get pods --all-namespaces -o wide"
+alias k8-all="kubectl get all --all-namespaces -o wide"
+
 alias btoff="sudo kextunload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBTransport"
 alias bton="sudo kextload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBTransport"
 
@@ -63,6 +67,7 @@ fi
 JAVA_HOME=$APPS/java; export JAVA_HOME;
 PATH=$PATH:$JAVA_HOME/bin; export PATH;
 
+
 # ============================================================
 # Ant (brew install ant - /usr/local/bin/ant)
 # Maven (brew install maven - /usr/local/bin/mvn)
@@ -76,6 +81,13 @@ source $(brew --prefix nvm)/nvm.sh
 # To find out more visit: https://gulpjs.com/
 # npm install gulp-cli -g
 # npm install gulp -D
+
+
+# ============================================================
+# WordPress and MySQL
+# brew install mysql-client
+# ============================================================
+PATH=$PATH:/usr/local/opt/mysql-client/bin; export PATH;
 
 
 # ============================================================

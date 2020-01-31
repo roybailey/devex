@@ -13,8 +13,36 @@ BASEDIR=$(dirname "$0")
 echo "Script is running from folder $BASEDIR"
 
 YYYYmmdd=$(date +%Y%m%d)
-echo "Current date stamp $BASEDIR"
+echo "Current date stamp $YYYYmmdd"
 
+echo
+echo "# arguments called with ---->  ${@}     "
+echo "# \$1 ----------------------->  $1      "
+echo "# \$2 ----------------------->  $2      "
+echo "# path to me --------------->  ${0}     "
+echo "# parent path -------------->  ${0%/*}  "
+echo "# my name ------------------>  ${0##*/} "
+echo
+
+#
+# help
+#
+function help {
+  echo "try passing some arguments"
+  echo
+  echo "-url <url>"
+  echo "-db|--database <database>"
+  echo "-u|--user|--username <username>"
+  echo "-p|--pass|--password <password>"
+  echo "--flag"
+  echo
+  exit 0
+}
+
+if [ "$#" = 0 ]
+then
+  help
+fi
 
 # ============================================================
 # how to... script argument processing
@@ -62,8 +90,41 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 echo "url: $URL"
 echo "database: "$DATABASE
+echo "username: "$USERNAME
+echo "password: "$PASSWORD
 echo "flag: "$FLAG
 echo
+
+
+# ============================================================
+# how to... check for directory or file
+# -d directory
+# -f file
+# ! -d directory not found
+# ! -f file not found
+# ------------------------------------------------------------
+if [ -d "." ]
+then
+   echo "yep, current directory exists"
+fi
+
+if [ ! -d "not-found" ]
+then
+   echo "nope, not-found directory doesn't exist"
+fi
+
+
+# ============================================================
+# how to... check for matching regex
+# [ "SOMETHING" =~ "regex" ]
+# ------------------------------------------------------------
+if [[ ["ABC" =~ "B"] ]]; then
+  echo "ABC matches with B as a regex"
+fi
+if [[ "ABC.123" =~ [^a-zA-Z0-9-] ]]; then
+  echo "ABC-123 contains matches [^a-zA-Z0-9-] as a regex and therefore has invalid char"
+fi
+
 
 # ============================================================
 # how to... if elif fi statements
@@ -123,3 +184,11 @@ chmod 777 $SCRIPTFILE
 
 . $SCRIPTFILE
 rm $SCRIPTFILE
+
+
+read -r -p "Do you want to do something [y/n]?" input
+if [ "$input" = "y" ]; then
+  echo "Do it now"
+else
+  echo "Do it later"
+fi
