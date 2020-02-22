@@ -52,4 +52,3 @@ _e.g. suggestions for technical debt reduction, simplification or enhancements_
 * e.g. could simplify the code by consolidating the three internal services
 
 
-&copy; 2020 PEI Media. All rights Reserved.
