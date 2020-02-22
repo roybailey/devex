@@ -186,9 +186,110 @@ chmod 777 $SCRIPTFILE
 rm $SCRIPTFILE
 
 
+# ============================================================
+# how to... read specific character for prompts
+# ------------------------------------------------------------
 read -r -p "Do you want to do something [y/n]?" input
 if [ "$input" = "y" ]; then
   echo "Do it now"
 else
   echo "Do it later"
 fi
+
+
+# ============================================================
+# how to... strip a url into domain
+# ------------------------------------------------------------
+
+function domain {
+  echo "Checking   : $1"
+  SITEURL=$1
+  if [[ "$SITEURL" = "" ]] | [[ "${SITEURL}" =~ ERROR ]]; then
+    echo "Suppressed : $SITEURL"
+  else
+    DOMAIN=${SITEURL/https:\/\//}
+    DOMAIN=${DOMAIN/http:\/\//}
+    echo $SITEURL was stripped into $DOMAIN
+  fi
+}
+
+domain
+domain https://www.google.com
+domain http://www.google.com
+domain "ERROR 1146 (42S02) at line 1: Table 'local.wp_8_options' doesn't exist"
+
+
+# ============================================================
+# how to... declare array
+# ------------------------------------------------------------
+
+array=(one two three four [5]=five)
+
+echo "Array size: ${#array[*]}"
+
+echo "Array items:"
+for item in ${array[*]}
+do
+    printf "   %s\n" $item
+done
+
+echo "Array indexes:"
+for index in ${!array[*]}
+do
+    printf "   %d\n" $index
+done
+
+echo "Array items and indexes:"
+for index in ${!array[*]}
+do
+    printf "%4d: %s\n" $index ${array[$index]}
+done
+
+array=("first item" "second item" "third" "item")
+
+echo "Number of items in original array: ${#array[*]}"
+for ix in ${!array[*]}
+do
+    printf "   %s\n" "${array[$ix]}"
+done
+echo
+
+arr=(${array[*]})
+echo "After unquoted expansion: ${#arr[*]}"
+for ix in ${!arr[*]}
+do
+    printf "   %s\n" "${arr[$ix]}"
+done
+echo
+
+arr=("${array[*]}")
+echo "After * quoted expansion: ${#arr[*]}"
+for ix in ${!arr[*]}
+do
+    printf "   %s\n" "${arr[$ix]}"
+done
+echo
+
+arr=("${array[@]}")
+echo "After @ quoted expansion: ${#arr[*]}"
+for ix in ${!arr[*]}
+do
+    printf "   %s\n" "${arr[$ix]}"
+done
+
+ARRAY=()
+ARRAY+=('foo')
+ARRAY+=('bar')
+
+echo "Array items:"
+for item in ${ARRAY[*]}
+do
+    printf "   %s\n" $item
+done
+
+. ./template-variables.sh
+
+echo "Variable Values from External file template-variables.sh"
+echo "TMP_VAR_NAME=$TMP_VAR_NAME"
+echo "TMP_VAR_SCRIPTNAME=$TMP_VAR_SCRIPTNAME"
+echo "TMP_VAR_VALUE=$TMP_VAR_VALUE"
