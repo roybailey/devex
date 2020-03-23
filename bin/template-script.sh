@@ -293,3 +293,81 @@ echo "Variable Values from External file template-variables.sh"
 echo "TMP_VAR_NAME=$TMP_VAR_NAME"
 echo "TMP_VAR_SCRIPTNAME=$TMP_VAR_SCRIPTNAME"
 echo "TMP_VAR_VALUE=$TMP_VAR_VALUE"
+
+#
+# sed url parsing
+#
+URLPATHQUERY=$(echo 'http://admin.stage.domain.com/one/two/three/something?a=1&b=2' | sed 's|.*://[^/]*/\([^?]*\)|/\1|g')
+echo URLPATHQUERY=$URLPATHQUERY
+URLPATH=$(echo 'http://admin.stage.domain.com/one/two/three/something?a=1&b=2' | sed 's|.*://[^/]*/\([^?]*\)?.*|/\1|g')
+echo URLPATH=$URLPATH
+URLDOMAIN=$(echo 'http://admin.stage.domain.com/one/two/three/something?a=1&b=2' | sed -E -e 's_.*://([^/@]*@)?([^/:]+).*_\2_')
+echo URLDOMAIN=$URLDOMAIN
+
+echo "hello" > temp.log
+echo "one" >> temp.log
+echo "two" >> temp.log
+echo "three" >> temp.log
+
+#
+# arrays
+#
+
+printf "\ncreate and loop through array"
+
+ARRAY=( "cow moo"
+        "dinosaur roar"
+        "bird chirp"
+        "bash rock" )
+
+for animal in "${ARRAY[@]}" ; do
+    KEY=${animal%% *}
+    VALUE=${animal#* }
+    printf "%s likes to %s.\n" "$KEY" "$VALUE"
+done
+
+printf "\nindex access array element\n"
+echo -e "${ARRAY[1]%%:*} is an extinct animal which likes to ${ARRAY[1]#*:}\n"
+
+printf "\nread array from file with eval\n"
+IFS=$'\r\n' GLOBIGNORE='*' command eval  'XYZ=($(cat ./template-map.txt))'
+echo "XYZ[1]=${XYZ[1]}"
+
+printf "\nread array from file with read command\n"
+IFS=$'\n' read -d '' -r -a lines < ./template-map.txt
+echo "lines[1]=${lines[1]}"
+
+printf "\nloop through array values (lines from file)\n"
+for line in "${lines[@]}" ; do
+    KEY=${line%% *}
+    VALUE=${line#* }
+    printf "%s likes to %s.\n" "$KEY" "$VALUE"
+done
+
+keyarray
+valarray
+printf "\nloop through array indices (lines from file)\n"
+for index in "${!lines[@]}"; do
+    KEY=${lines[index]%% *}
+    VALUE=${lines[index]#* }
+    printf "%s likes to %s.\n" "$KEY" "$VALUE"
+    keyarray+=($KEY)
+    valarray+=($VALUE)
+done
+
+printf "\nloop through parallel arrays using indices (key/value arrays)\n"
+for index in "${!lines[@]}"; do
+    printf "%s=%s\n" "${keyarray[$index]}" "${valarray[$index]}"
+done
+
+printf "\nfor loop two arrays parallel arrays\n"
+declare -a num
+declare -a words
+
+num=(1 2 3 4 5 6 7)
+words=(one two three four five six seven)
+
+for idx in "${num[@]}"
+do
+  echo ":${num[$idx-1]}: :${words[$idx-1]}:"
+done

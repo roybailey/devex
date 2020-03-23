@@ -1,0 +1,82 @@
+image: node:12
+
+stages: 
+  - test
+  - deploy
+
+test:
+  stage: test
+  before_script:
+    - cp .deploy/.gitlab-ci.npmrc .npmrc
+    - npm install
+  script:
+    - npm run build
+    - npm test
+  allow_failure: false
+
+merge_requests:
+  stage: test
+  script:
+    - .deploy/merge-request.sh
+  only:
+    - merge_requests
+
+# Linting added to pipeline though project may not implement yet
+lint:
+  stage: test
+  before_script:
+    - cp .deploy/.gitlab-ci.npmrc .npmrc
+    - npm install
+  script:
+    - npm run lint
+
+# Code Quality test and keep the report for a month.
+code_quality:
+  stage: test
+  image: docker:stable
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker info
+    - docker run 
+       --env CODECLIMATE_DEBUG=1 
+       --env CODECLIMATE_CODE="$PWD" 
+       --volume "$PWD":/code 
+       --volume /var/run/docker.sock:/var/run/docker.sock 
+       --volume /tmp/cc:/tmp/cc 
+       codeclimate/codeclimate:0.85.2 analyze -f html > report.html
+
+  artifacts:
+    paths: [report.html]
+    expire_in: 1 month
+  dependencies: []
+  except:
+    variables:
+      - $CODE_QUALITY_DISABLED
+
+# Publish steps on branch only a dry-run to verify no issues
+publish:branch-dry-run:
+  stage: deploy
+  before_script:
+    - cp .deploy/.gitlab-ci.npmrc .npmrc
+    - npm install
+  script:
+    - npm run build
+    - npm publish --dry-run
+
+# Publish steps on new tag or trigger to actually publish
+publish:
+  only:
+    - master
+  stage: deploy
+  before_script:
+    - .deploy/merge-request.sh
+    - cp .deploy/.gitlab-ci.npmrc .npmrc
+    - npm install
+  script:
+    - npm run build
+    - npm publish
