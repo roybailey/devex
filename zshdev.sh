@@ -91,6 +91,13 @@ PATH=$PATH:/usr/local/opt/mysql-client/bin; export PATH;
 
 
 # ============================================================
+# Flutter
+# ============================================================
+export FLUTTER_HOME=~/Coding/apps/flutter
+PATH=$PATH:$FLUTTER_HOME/bin; export PATH;
+
+
+# ============================================================
 # Tips & Reminders
 # ============================================================
 
