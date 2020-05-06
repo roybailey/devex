@@ -14,6 +14,8 @@ alias bitbucket="echo cd ~/Coding/bitbucket; cd ~/Coding/bitbucket"
 alias github="echo cd ~/Coding/github; cd ~/Coding/github"
 alias gitlab="echo cd ~/Coding/gitlab; cd ~/Coding/gitlab"
 alias gitview="echo cd ~/Coding/gitview; cd ~/Coding/gitview"
+alias git11fs="echo cd ~/Coding/git11fs; cd ~/Coding/git11fs"
+
 alias temp="echo cd ~/Temp; cd ~/Temp"
 
 alias gs="echo git status; git status"
@@ -21,7 +23,7 @@ alias gt="echo git tag; git tag"
 alias gp="echo git pull; git pull"
 
 alias git-config-roybaileybiz='git config user.name "Roy Bailey"; git config user.email "roybaileybiz@gmail.com"'
-alias git-config-peimedia='git config user.name "Roy Bailey"; git config user.email "roy.b@peimedia.com"'
+alias git-config-11fs='git config user.name "Roy Bailey"; git config user.email "roy.bailey@11fs.com"'
 alias git-config-global-clear-user='git config --global --unset user.name; git config --global --unset user.email'
 alias git-config-clear-user='git config --unset user.name; git config --unset user.email'
 
