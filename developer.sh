@@ -25,6 +25,7 @@ alias mvnci="echo mvn clean install; mvn clean install"
 alias mvndt="echo mvn dependency:tree; mvn dependency:tree"
 alias mvnrun="echo mvn compile && mvn exec:java; mvn compile && mvn exec:java"
 alias mvnversion='function _blah(){ echo "mvn versions:set -DnewVersion=$1"; mvn versions:set -DnewVersion=$1; };_blah'
+alias mvnrun='echo mvn spring-boot:run; mvn spring-boot:run'
 
 alias grb="echo gradle build; gradle build"
 alias grd="echo gradle dependencies; gradle dependencies"
