@@ -30,7 +30,10 @@ alias git-config-clear-user='git config --unset user.name; git config --unset us
 alias mvnci="echo mvn clean install; mvn clean install"
 alias mvndt="echo mvn dependency:tree; mvn dependency:tree"
 alias mvnrun="echo mvn compile && mvn exec:java; mvn compile && mvn exec:java"
-alias mvnversion='function _blah(){ echo "mvn versions:set -DnewVersion=$1"; mvn versions:set -DnewVersion=$1; };_blah'
+mvnversion() {
+  echo "mvn versions:set -DnewVersion=$1"
+  mvn versions:set -DnewVersion=$1
+}
 
 alias grb="echo gradle build; gradle build"
 alias grd="echo gradle dependencies; gradle dependencies"
@@ -41,8 +44,33 @@ alias npm-tape="echo npm run tape; npm run tape"
 alias babel-tape="echo tape -r babel-register; tape -r babel-register"
 
 alias dc-up="docker-compose up"
-alias k8-pods="kubectl get pods --all-namespaces -o wide"
-alias k8-all="kubectl get all --all-namespaces -o wide"
+
+alias kc="kubectl"
+alias kc-config-docker="export KUBECONFIG=/Users/roy.bailey/.kube/config.docker-desktop; echo kubectl pointing to docker-desktop"
+alias kc-config-ava="export KUBECONFIG=/Users/roy.bailey/.kube/config.ava-stage; echo kubectl pointing to ava-stage"
+alias kc-pods="echo kubectl get pods --all-namespaces -o wide; kubectl get pods --all-namespaces -o wide"
+alias kc-all="echo kubectl get all --all-namespaces -o wide; kubectl get all --all-namespaces -o wide"
+
+alias ava-pods="echo kubectl get pods -n ava; kubectl get pods -n ava"
+ava-lookup() {
+  kubectl get pods -n ava | grep -vE "\-dev\-" | grep $1 | awk '{print $1}' | tee /dev/tty | pbcopy
+}
+ava-log() {
+  KC_LOG_FOLLOW=
+  if [[ "$1" = "-f" ]]; then
+    KC_LOG_FOLLOW=$1
+    shift;
+  fi
+  # shellcheck disable=SC2046
+  kubectl -n ava logs $KC_LOG_FOLLOW $(kubectl get pods -n ava | grep -vE "\-dev\-" | grep $1 | awk '{print $1}')
+}
+
+e2e() {
+  E2E_TEST_EMAIL="$1@11fs.com" yarn run test:e2e
+}
+e2e-rb() {
+  E2E_TEST_EMAIL="roy.bailey+$1@11fs.com" yarn run test:e2e
+}
 
 alias btoff="sudo kextunload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBTransport"
 alias bton="sudo kextload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBTransport"
@@ -78,7 +106,7 @@ PATH=$PATH:$JAVA_HOME/bin; export PATH;
 # ============================================================
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
-
+nvm use 12 --lts
 
 # To find out more visit: https://gulpjs.com/
 # npm install gulp-cli -g
@@ -105,3 +133,4 @@ PATH=$PATH:$FLUTTER_HOME/bin; export PATH;
 
 . $SCRIPTDIR/bin/favorites.sh
 . $SCRIPTDIR/bin/versions.sh
+kc-config-ava
