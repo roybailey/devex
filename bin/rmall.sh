@@ -1,5 +1,12 @@
 #!/bin/bash
 
+function removeAll() {
+  echo -e "removing all '$1' folders/files"
+  find . -name "$1" -depth
+  read -p "Press enter to delete the above"
+  find . -name "$1" -depth -exec rm -rf {} \;
+}
+
 options=(idea target node build .DS_Store $1 exit)
 select menu in "${options[@]}";
 do
@@ -7,29 +14,28 @@ do
   case $menu in
   idea)
     echo -e "removing all .idea folders and *.iml files"
-    find . -name '*.iml' -depth -exec rm {} \;
-    find . -name '.idea' -depth -exec rm -rf {} \;
+    removeAll "*.iml"
+    removeAll ".idea"
     ;;
   target)
     echo -e "removing all target folders"
-    find . -name target -depth -exec rm -rf {} \;
+    removeAll "target"
     ;;
   node)
     echo -e "removing all node_modules folders"
-    find . -name node_modules -depth -exec rm -rf {} \;
+    removeAll "node_modules"
     ;;
   build)
     echo -e "removing all build folders"
-    find . -name build -depth -exec rm -rf {} \;
+    removeAll "build"
     ;;
   .DS_Store)
     echo -e "removing all .DS_Store files"
-    find . -name .DS_Store -depth -exec rm {} \;
+    removeAll ".DS_Store"
     ;;
   *)
     if [ "$1" = "$menu" ]; then
-      echo -e "removing all '$1' folders/files"
-      find . -name '$1' -depth -exec rm {} \;
+      removeAll "$1"
     else
       echo -e "exiting"
       exit 0
