@@ -64,6 +64,13 @@ ava-log() {
   # shellcheck disable=SC2046
   kubectl -n ava logs $KC_LOG_FOLLOW $(kubectl get pods -n ava | grep -vE "\-dev\-" | grep $1 | awk '{print $1}')
 }
+ava-db() {
+  # kubectl get secrets payments-admin.payments-cluster.credentials.postgresql.acid.zalan.do -n postgres-cluster -o 'jsonpath={.data.password}' -n postgres-cluster | base64 -d | pbcopy
+  # psql --host=localhost --port=5432 --username=payments-admin --password dbname=payments
+  AVA_DB_PASSWORD=$(kubectl get secrets payments-admin.payments-cluster.credentials.postgresql.acid.zalan.do -n postgres-cluster -o 'jsonpath={.data.password}' -n postgres-cluster | base64 -d)
+  kubectl port-forward payments-cluster-0 5432:5432 -n postgres-cluster &
+  psql "dbname=payments host=localhost user=payments-admin password=$AVA_DB_PASSWORD port=5432 sslmode=require options=--search_path=payments"
+}
 
 e2e() {
   E2E_TEST_EMAIL="$1@11fs.com" yarn run test:e2e
