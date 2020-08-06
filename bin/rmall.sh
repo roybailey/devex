@@ -1,55 +1,70 @@
 #!/bin/bash
 
+echo "This utility will force delete all folders/files in pwd and all sub-folders"
+echo "the following menu provides some common types for quick selection, or provide your own as an argument"
+echo "once seleted the folders/files to be removed will first be listed before a confirmation key to actually force remove them"
+
+MODE=("TARGET" "NODE"         "BUILD" "IDEA"  "GIT" "MAC"       "CUSTOM")
+MENU=("target" "node_modules" "build" "idea" ".git" ".DS_Store" "$1")
+
+show_menu() {
+  normal=$(echo "\033[m")
+  number=$(echo "\033[36m") #Blue
+  menu=$(echo "\033[33m")   #yellow
+  bgred=$(echo "\033[41m")
+  fgred=$(echo "\033[31m")
+  printf "\n----------------------------------------\n"
+  for ((idx = 1; idx <= ${#MENU[@]}; idx++)); do
+    if [ "${MENU[$idx - 1]}" != "" ]; then
+      printf "${number} $idx)${menu} ${MENU[$idx - 1]} ${normal} files and folders \n"
+    fi
+  done
+  printf " ${fgred}x) to exit script ${normal}"
+  printf "\n----------------------------------------\n"
+  printf "Please enter a menu option and enter\n"
+  read -r opt
+  if [[ "$opt" == "x" ]] || [[ "$opt" == "X" ]]; then
+    OPT="EXIT"
+  else
+    OPT="${MODE[$opt - 1]}"
+  fi
+}
+
 function removeAll() {
-  echo -e "removing all '$1' folders/files"
+  echo -e "searching all '$1' folders/files"
   find . -name "$1" -depth
   read -p "Press enter to delete the above"
   find . -name "$1" -depth -exec rm -rf {} \;
 }
 
-echo "This utility will force delete all folders/files in pwd and all sub-folders"
-echo "the following menu provides some common types for quick selection, or provide your own as an argument"
-echo "once seleted the folders/files to be removed will first be listed before a confirmation key to actually force remove them"
-echo
-
-# needs a really long option to force vertical display of menu
-options=($1 "'target' folders" "'node_modules' folders" "'build' folders" "idea related files and folders" "'.git' folders" ".DS_Store mac files" "---------- exit this script ----------")
-select menu in "${options[@]}";
-do
-  echo -e "\nyou picked $menu ($REPLY)"
-  case $menu in
-  target)
-    echo -e "removing all target folders"
+while [ "$OPT" != "EXIT" ]; do
+  show_menu "$@"
+  echo "you chose ${opt} ${OPT}"
+  case $OPT in
+  "TARGET")
     removeAll "target"
     ;;
-  node)
-    echo -e "removing all node_modules folders"
+  "NODE")
     removeAll "node_modules"
     ;;
-  build)
-    echo -e "removing all build folders"
+  "BUILD")
     removeAll "build"
     ;;
-  idea)
-    echo -e "removing all .idea folders and *.iml files"
+  "IDEA")
     removeAll "*.iml"
     removeAll ".idea"
     ;;
-  .git)
-    echo -e "removing all .git files"
+  "GIT")
     removeAll ".git"
     ;;
-  .DS_Store)
-    echo -e "removing all .DS_Store files"
+  "MAC")
     removeAll ".DS_Store"
     ;;
+  "CUSTOM")
+    removeAll "$1"
+    ;;
   *)
-    if [ "$1" = "$menu" ]; then
-      removeAll "$1"
-    else
-      echo -e "exiting"
-      exit 0
-    fi
+    echo -e "Nothing to do"
     ;;
   esac
 done
