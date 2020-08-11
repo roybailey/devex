@@ -1,44 +1,55 @@
 #!/bin/bash
 
 echo "This utility will force delete all folders/files in pwd and all sub-folders"
-echo "the following menu provides some common types for quick selection, or provide your own as an argument"
+echo "the following FG_OPTION provides some common types for quick selection, or provide your own as an argument"
 echo "once seleted the folders/files to be removed will first be listed before a confirmation key to actually force remove them"
 
-MODE=("TARGET" "NODE"         "BUILD" "IDEA"  "GIT" "MAC"       "CUSTOM")
+FG_NORMAL=$(echo "\033[m")
+FG_INDEX=$(echo "\033[36m") #Blue
+FG_OPTION=$(echo "\033[33m")   #yellow
+BG_RED=$(echo "\033[41m")
+FG_RED=$(echo "\033[31m")
+
+MODE=("TARGET" "NODE" "BUILD" "IDEA" "GIT" "MAC" "CUSTOM")
 MENU=("target" "node_modules" "build" "idea" ".git" ".DS_Store" "$1")
 
-show_menu() {
-  normal=$(echo "\033[m")
-  number=$(echo "\033[36m") #Blue
-  menu=$(echo "\033[33m")   #yellow
-  bgred=$(echo "\033[41m")
-  fgred=$(echo "\033[31m")
+show_FG_OPTION() {
   printf "\n----------------------------------------\n"
   for ((idx = 1; idx <= ${#MENU[@]}; idx++)); do
     if [ "${MENU[$idx - 1]}" != "" ]; then
-      printf "${number} $idx)${menu} ${MENU[$idx - 1]} ${normal} files and folders \n"
+      printf "${FG_INDEX} $idx)${FG_OPTION} ${MENU[$idx - 1]} ${FG_NORMAL} files and folders \n"
     fi
   done
-  printf " ${fgred}x) to exit script ${normal}"
+  printf " ${FG_RED}x) to exit script ${FG_NORMAL}"
   printf "\n----------------------------------------\n"
-  printf "Please enter a menu option and enter\n"
+  printf "Please enter an ${FG_INDEX} option number ${FG_NORMAL} and hit enter\n"
   read -r opt
-  if [[ "$opt" == "x" ]] || [[ "$opt" == "X" ]]; then
+  case $opt in
+  "x" | "X" | "q" | "Q")
     OPT="EXIT"
-  else
+    ;;
+  *)
     OPT="${MODE[$opt - 1]}"
-  fi
+    ;;
+  esac
 }
 
 function removeAll() {
-  echo -e "searching all '$1' folders/files"
-  find . -name "$1" -depth
+  for spec in "$@"; do
+    echo -e "searching all '$spec' folders/files"
+    printf "${FG_RED}"
+    find . -name "$spec" -depth
+    printf "${FG_NORMAL}"
+  done
   read -p "Press enter to delete the above"
-  find . -name "$1" -depth -exec rm -rf {} \;
+  for spec in "$@"; do
+    echo -e "${BG_RED}removing all '$spec' folders/files${FG_NORMAL}"
+    find . -name "$spec" -depth -exec rm -rf {} \;
+  done
 }
 
 while [ "$OPT" != "EXIT" ]; do
-  show_menu "$@"
+  show_FG_OPTION "$@"
   echo "you chose ${opt} ${OPT}"
   case $OPT in
   "TARGET")
@@ -51,11 +62,10 @@ while [ "$OPT" != "EXIT" ]; do
     removeAll "build"
     ;;
   "IDEA")
-    removeAll "*.iml"
-    removeAll ".idea"
+    removeAll "*.iml" ".idea"
     ;;
   "GIT")
-    removeAll ".git"
+    removeAll ".git" ".github"
     ;;
   "MAC")
     removeAll ".DS_Store"
