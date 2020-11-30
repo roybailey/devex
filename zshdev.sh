@@ -87,23 +87,6 @@ TMPDIR=$TMP; export TMPDIR
 APPS=~/Coding/apps
 PATH=$PATH:$SCRIPTDIR/bin; export PATH;
 
-# ============================================================
-# Java
-# ============================================================
-export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
-
-alias java8='export JAVA_HOME=$JAVA_8_HOME'
-alias java11='export JAVA_HOME=$JAVA_11_HOME'
-
-#default java8
-if [[ ! -a ~/Coding/apps/java ]]; then
-    ln -s $JAVA_8_HOME ~/Coding/apps/java
-fi
-
-JAVA_HOME=$APPS/java; export JAVA_HOME;
-PATH=$PATH:$JAVA_HOME/bin; export PATH;
-
 
 # ============================================================
 # Ant (brew install ant - /usr/local/bin/ant)
@@ -118,6 +101,43 @@ nvm use 12 --lts
 # To find out more visit: https://gulpjs.com/
 # npm install gulp-cli -g
 # npm install gulp -D
+
+
+# ============================================================
+# Java
+# ============================================================
+
+SDKMAN_JAVA_FOLDER=`cd ~/.sdkman/candidates/java/; pwd`
+SDKMAN_JAVA_8=`ls $SDKMAN_JAVA_FOLDER | grep 8.0`
+SDKMAN_JAVA_11=`ls $SDKMAN_JAVA_FOLDER | grep 11.0`
+
+if [ "$SDKMAN_JAVA_8" = "" ]; then
+  echo sdk java v8 not installed, falling back to Java install locations
+  export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
+else
+  export JAVA_8_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_8
+fi
+
+if [ "$SDKMAN_JAVA_11" = "" ]; then
+  echo sdk java v11 not installed, falling back to Java install locations
+  export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+else
+  export JAVA_11_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_11
+fi
+
+alias java8='sdk use java $SDKMAN_JAVA_8;  sdk home java $SDKMAN_JAVA_8'
+alias java11='sdk use java $SDKMAN_JAVA_11;  sdk home java $SDKMAN_JAVA_11'
+
+echo SDKMAN_JAVA_FOLDER=$SDKMAN_JAVA_FOLDER
+echo SDKMAN_JAVA_8=$SDKMAN_JAVA_8
+echo SDKMAN_JAVA_11=$SDKMAN_JAVA_11
+echo JAVA_8_HOME=$JAVA_8_HOME
+echo JAVA_11_HOME=$JAVA_11_HOME
+
+# default to java11
+java11
+echo
+echo JAVA_HOME=$JAVA_HOME
 
 
 # ============================================================

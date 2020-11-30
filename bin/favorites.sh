@@ -1,6 +1,8 @@
 #!/bin/zsh
 echo
 echo ---------- coding tips ----------
+echo $fg_bold[blue] "java8 $reset_color 'java8'"
+echo $fg_bold[blue] "java11 $reset_color 'java11'"
 echo $fg_bold[blue] "gss/gsb $reset_color 'git status'"
 echo $fg_bold[blue] "gaa     $reset_color 'git add --all'"
 echo $fg_bold[blue] "gcam    $reset_color 'git commit -a -m <www.conventionalcommits.org message>'"
