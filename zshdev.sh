@@ -2,6 +2,14 @@
 echo Running Developer Profile
 SCRIPTDIR=${0%/*}
 echo from $fg_bold[blue] $SCRIPTDIR $reset_color
+echo
+echo
+
+echo Setting up sdkman...
+# THIS MUST BE AT THE START OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="~/.sdkman"
+[[ -s "~/.sdkman/bin/sdkman-init.sh" ]] && source "~/.sdkman/bin/sdkman-init.sh"
+
 
 # shell variables (these were added to help running cassandra locally long back)
 # ulimit -n 4096
