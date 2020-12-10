@@ -5,12 +5,6 @@ echo from $fg_bold[blue] $SCRIPTDIR $reset_color
 echo
 echo
 
-echo Setting up sdkman...
-# THIS MUST BE AT THE START OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="~/.sdkman"
-[[ -s "~/.sdkman/bin/sdkman-init.sh" ]] && source "~/.sdkman/bin/sdkman-init.sh"
-
-
 # shell variables (these were added to help running cassandra locally long back)
 # ulimit -n 4096
 # ulimit -u 1024
@@ -102,9 +96,27 @@ PATH=$PATH:$SCRIPTDIR/bin; export PATH;
 # Gradle (brew install gradle - /usr/local/bin/gradle)
 # nvm (brew install nvm; mkdir ~/.nvm)
 # ============================================================
+if ! command -v brew &> /dev/null; then
+    echo "brew not found, see https://brew.sh/"
+fi
+if ! command -v ant &> /dev/null; then
+    echo "ant not found, run 'brew install ant'"
+fi
+if ! command -v mvn &> /dev/null; then
+    echo "maven not found, run 'brew install maven'"
+fi
+if ! command -v gradle &> /dev/null; then
+    echo "gradle not found, run 'brew install gradle'"
+fi
+
 export NVM_DIR=~/.nvm
 source $(brew --prefix nvm)/nvm.sh
-nvm use 12 --lts
+
+if ! command -v nvm &> /dev/null; then
+    echo "nvm not found, run 'brew install nvm; mkdir ~/.nvm'"
+fi
+
+nvm use --lts
 
 # To find out more visit: https://gulpjs.com/
 # npm install gulp-cli -g
@@ -114,6 +126,11 @@ nvm use 12 --lts
 # ============================================================
 # Java
 # ============================================================
+
+if ! command -v sdk &> /dev/null
+then
+    echo "sdk not found, see https://sdkman.io/install"
+fi
 
 SDKMAN_JAVA_FOLDER=`cd ~/.sdkman/candidates/java/; pwd`
 SDKMAN_JAVA_8=`ls $SDKMAN_JAVA_FOLDER | grep 8.0`
@@ -168,4 +185,4 @@ PATH=$PATH:$FLUTTER_HOME/bin; export PATH;
 
 . $SCRIPTDIR/bin/favorites.sh
 . $SCRIPTDIR/bin/versions.sh
-kc-config-ava
+
