@@ -31,6 +31,7 @@ alias git-config-clear-user='git config --unset user.name; git config --unset us
 
 alias mvnci="echo mvn clean install; mvn clean install"
 alias mvndt="echo mvn dependency:tree; mvn dependency:tree"
+alias mvnsrc="echo mvn source:jar install dependency:sources -DskipTests=true; mvn source:jar install dependency:sources -DskipTests=true"
 alias mvnrun="echo mvn compile && mvn exec:java; mvn compile && mvn exec:java"
 mvnversion() {
   echo "mvn versions:set -DnewVersion=$1"
