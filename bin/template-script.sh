@@ -371,3 +371,10 @@ for idx in "${num[@]}"
 do
   echo ":${num[$idx-1]}: :${words[$idx-1]}:"
 done
+
+printf "\nobsfucating passwords\n"
+password=secretvalue
+printf '%s\n' $password
+
+eval "printf '*%.0s' {1..$((${#password} -3))}"
+printf '%s\n' "${password: -3}"

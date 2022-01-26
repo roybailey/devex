@@ -30,10 +30,11 @@ alias git-config-global-clear-user='git config --global --unset user.name; git c
 alias git-config-clear-user='git config --unset user.name; git config --unset user.email'
 
 alias mvnci="echo mvn clean install; mvn clean install"
+alias mvncist="echo mvn clean install -DskipTests=true; mvn clean install -DskipTests=true"
 alias mvndt="echo mvn dependency:tree; mvn dependency:tree"
 alias mvnsrc="echo mvn source:jar install dependency:sources -DskipTests=true; mvn source:jar install dependency:sources -DskipTests=true"
 alias mvnrun="echo mvn compile && mvn exec:java; mvn compile && mvn exec:java"
-mvnversion() {
+mvn-new-version() {
   echo "mvn versions:set -DnewVersion=$1"
   mvn versions:set -DnewVersion=$1
 }
@@ -50,36 +51,20 @@ alias dc-up="docker-compose up"
 
 alias kc="kubectl"
 alias kc-config-docker="export KUBECONFIG=/Users/roy.bailey/.kube/config.docker-desktop; echo kubectl pointing to docker-desktop"
-alias kc-config-ava="export KUBECONFIG=/Users/roy.bailey/.kube/config.ava-stage; echo kubectl pointing to ava-stage"
 alias kc-pods="echo kubectl get pods --all-namespaces -o wide; kubectl get pods --all-namespaces -o wide"
 alias kc-all="echo kubectl get all --all-namespaces -o wide; kubectl get all --all-namespaces -o wide"
 
-alias ava-pods="echo kubectl get pods -n ava; kubectl get pods -n ava"
-ava-lookup() {
-  kubectl get pods -n ava | grep -vE "\-dev\-" | grep $1 | awk '{print $1}' | tee /dev/tty | pbcopy
+kc-lookup() {
+  kubectl get pods | grep $1 | awk '{print $1}' | tee /dev/tty | pbcopy
 }
-ava-log() {
+kc-logs() {
   KC_LOG_FOLLOW=
   if [[ "$1" = "-f" ]]; then
     KC_LOG_FOLLOW=$1
     shift;
   fi
   # shellcheck disable=SC2046
-  kubectl -n ava logs $KC_LOG_FOLLOW $(kubectl get pods -n ava | grep -vE "\-dev\-" | grep $1 | awk '{print $1}')
-}
-ava-db() {
-  # kubectl get secrets payments-admin.payments-cluster.credentials.postgresql.acid.zalan.do -n postgres-cluster -o 'jsonpath={.data.password}' -n postgres-cluster | base64 -d | pbcopy
-  # psql --host=localhost --port=5432 --username=payments-admin --password dbname=payments
-  AVA_DB_PASSWORD=$(kubectl get secrets payments-admin.payments-cluster.credentials.postgresql.acid.zalan.do -n postgres-cluster -o 'jsonpath={.data.password}' -n postgres-cluster | base64 -d)
-  kubectl port-forward payments-cluster-0 5432:5432 -n postgres-cluster &
-  psql "dbname=payments host=localhost user=payments-admin password=$AVA_DB_PASSWORD port=5432 sslmode=require options=--search_path=payments"
-}
-
-e2e() {
-  E2E_TEST_EMAIL="$1@11fs.com" yarn run test:e2e
-}
-e2e-rb() {
-  E2E_TEST_EMAIL="roy.bailey+$1@11fs.com" yarn run test:e2e
+  kubectl logs $KC_LOG_FOLLOW $(kubectl get pods | grep $1 | awk '{print $1}')
 }
 
 alias btoff="sudo kextunload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBTransport"
@@ -165,6 +150,9 @@ java11
 echo
 echo JAVA_HOME=$JAVA_HOME
 
+export LOCAL_POSTGRES_URL=jdbc:postgresql://localhost:5432/postgres
+export LOCAL_POSTGRES_USERNAME=postgres
+export LOCAL_POSTGRES_PASSWORD=localhost
 
 # ============================================================
 # WordPress and MySQL
