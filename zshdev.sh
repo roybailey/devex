@@ -16,13 +16,13 @@ alias bitbucket="echo cd ~/Coding/bitbucket; cd ~/Coding/bitbucket"
 alias github="echo cd ~/Coding/github; cd ~/Coding/github"
 alias gitlab="echo cd ~/Coding/gitlab; cd ~/Coding/gitlab"
 alias gitview="echo cd ~/Coding/gitview; cd ~/Coding/gitview"
-alias git11fs="echo cd ~/Coding/git11fs; cd ~/Coding/git11fs"
 
 alias temp="echo cd ~/Temp; cd ~/Temp"
 
 alias gs="echo git status; git status"
 alias gt="echo git tag; git tag"
 alias gp="echo git pull; git pull"
+alias gd="echo git diff; git diff"
 
 alias git-config-roybaileybiz='git config user.name "Roy Bailey"; git config user.email "roybaileybiz@gmail.com"'
 alias git-config-11fs='git config user.name "Roy Bailey"; git config user.email "roy.bailey@11fs.com"'
@@ -64,7 +64,26 @@ kc-logs() {
     shift;
   fi
   # shellcheck disable=SC2046
-  kubectl logs $KC_LOG_FOLLOW $(kubectl get pods | grep $1 | awk '{print $1}')
+  kubectl logs $KC_LOG_FOLLOW $(kubectl get pods | grep $1 | awk '{print $1}') $2 $3 $4 $5 $6
+}
+kc-describe() {
+  # shellcheck disable=SC2046
+  echo "kubectl describe $(kubectl get all | grep $1 | awk '{print $1}') $2 $3 $4 $5 $6"
+}
+
+echo-helm() {
+  echo "helm install <release-name> <chart>\n  ^installs helm chart"
+  echo "helm install --set replicaCount=3 <release-name> <chart>\n  ^installs helm chart with replicaCount overridden as 3"
+  echo "helm install -f override-values.yaml <release-name> <chart>\n  ^installs helm chart with override values.yaml file"
+  echo "helm delete <release-name>\n  ^deletes helm chart"
+  echo "helm list -a\n  ^shows helm deployments"
+  echo "helm template <folder>\n  ^shows how the helm chart would generate k8 yaml"
+  echo "helm lint <folder>\n  ^shows any formatting errors in helm configs"
+}
+
+ps-port() {
+  echo sudo lsof -i :$1
+  sudo lsof -i :$1
 }
 
 alias btoff="sudo kextunload -b com.apple.iokit.BroadcomBluetoothHostControllerUSBTransport"
@@ -154,6 +173,14 @@ echo JAVA_HOME=$JAVA_HOME
 export LOCAL_POSTGRES_URL=jdbc:postgresql://localhost:5432/postgres
 export LOCAL_POSTGRES_USERNAME=postgres
 export LOCAL_POSTGRES_PASSWORD=localhost
+
+
+# ============================================================
+# Anaconda / Jupyter Notebooks
+# ============================================================
+export ANACONDA_HOME=~/opt/anaconda3
+PATH=$PATH:$ANACONDA_HOME/bin; export PATH;
+
 
 # ============================================================
 # WordPress and MySQL
