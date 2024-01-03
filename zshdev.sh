@@ -121,12 +121,13 @@ fi
 SDKMAN_JAVA_FOLDER=`cd ~/.sdkman/candidates/java/; pwd`
 SDKMAN_JAVA_8=`ls $SDKMAN_JAVA_FOLDER | grep 8.0`
 SDKMAN_JAVA_11=`ls $SDKMAN_JAVA_FOLDER | grep 11.0`
+SDKMAN_JAVA_17=`ls $SDKMAN_JAVA_FOLDER | grep 17.0`
 
-if [ "$SDKMAN_JAVA_8" = "" ]; then
-  echo sdk java v8 not installed, falling back to Java install locations
-  export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
+if [ "$SDKMAN_JAVA_17" = "" ]; then
+  echo sdk java v17 not installed, falling back to Java install locations
+  export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
 else
-  export JAVA_8_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_8
+  export JAVA_17_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_17
 fi
 
 if [ "$SDKMAN_JAVA_11" = "" ]; then
@@ -136,17 +137,17 @@ else
   export JAVA_11_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_11
 fi
 
-alias java8='sdk use java $SDKMAN_JAVA_8;  sdk home java $SDKMAN_JAVA_8'
+alias java17='sdk use java $SDKMAN_JAVA_17;  sdk home java $SDKMAN_JAVA_17'
 alias java11='sdk use java $SDKMAN_JAVA_11;  sdk home java $SDKMAN_JAVA_11'
 
 echo SDKMAN_JAVA_FOLDER=$SDKMAN_JAVA_FOLDER
-echo SDKMAN_JAVA_8=$SDKMAN_JAVA_8
+echo SDKMAN_JAVA_17=$SDKMAN_JAVA_17
 echo SDKMAN_JAVA_11=$SDKMAN_JAVA_11
-echo JAVA_8_HOME=$JAVA_8_HOME
+echo JAVA_17_HOME=$JAVA_17_HOME
 echo JAVA_11_HOME=$JAVA_11_HOME
 
 # default to java11
-java11
+java17
 echo
 echo JAVA_HOME=$JAVA_HOME
 
