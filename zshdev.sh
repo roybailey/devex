@@ -49,7 +49,16 @@ alias babel-tape="echo tape -r babel-register; tape -r babel-register"
 
 alias dc-up="docker-compose up"
 
-alias kc="kubectl"
+alias kc=kubectl
+alias kca="echo kubectl get all -A; kubectl get all -A"
+alias kcp="echo kubectl get pods -A; kubectl get pods -A"
+alias kcc="echo kubectl get configmaps -A; kubectl get configmaps -A"
+alias kcg="echo kubectl get gateways -A; kubectl get gateways -A"
+alias kcv="echo kubectl get VirtualService -A; kubectl get VirtualService -A"
+alias kcs="echo kubectl get services -A; kubectl get services -A"
+alias kcr="echo kubectl get replicasets -A; kubectl get replicasets -A"
+alias kcd="echo kubectl get deployments -A; kubectl get deployments -A"
+
 alias kc-config-docker="export KUBECONFIG=/Users/roy.bailey/.kube/config.docker-desktop; echo kubectl pointing to docker-desktop"
 alias kc-pods="echo kubectl get pods --all-namespaces -o wide; kubectl get pods --all-namespaces -o wide"
 alias kc-all="echo kubectl get all --all-namespaces -o wide; kubectl get all --all-namespaces -o wide"
@@ -64,7 +73,7 @@ kc-logs() {
     shift;
   fi
   # shellcheck disable=SC2046
-  kubectl logs $KC_LOG_FOLLOW $(kubectl get pods | grep $1 | awk '{print $1}') $2 $3 $4 $5 $6
+  kubectl logs $KC_LOG_FOLLOW $(kubectl get pods $2 $3 $4 $5 $6 | grep $1 | awk '{print $1}') $2 $3 $4 $5 $6
 }
 kc-describe() {
   # shellcheck disable=SC2046
@@ -199,6 +208,7 @@ PATH=$PATH:$FLUTTER_HOME/bin; export PATH;
 # ============================================================
 # Tips & Reminders
 # ============================================================
+export TERM=xterm-256color
 
 . $SCRIPTDIR/bin/favorites.sh
 . $SCRIPTDIR/bin/versions.sh
