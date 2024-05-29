@@ -10,6 +10,7 @@ echo
 # ulimit -u 1024
 
 # aliases
+alias lla='ls -al'
 alias lastmodified='find . -type f -exec stat -f "%Sm %N" -t "%Y%m%d%H%M" {} \; | sort -r'
 
 alias bitbucket="echo cd ~/Coding/bitbucket; cd ~/Coding/bitbucket"
@@ -29,9 +30,9 @@ alias git-config-11fs='git config user.name "Roy Bailey"; git config user.email 
 alias git-config-global-clear-user='git config --global --unset user.name; git config --global --unset user.email'
 alias git-config-clear-user='git config --unset user.name; git config --unset user.email'
 
-alias mvnci="echo mvn clean install; mvn clean install"
-alias mvncist="echo mvn clean install -DskipTests=true; mvn clean install -DskipTests=true"
-alias mvndt="echo mvn dependency:tree; mvn dependency:tree"
+alias mvnci="echo mvn clean install | tee mvnci.log; mvn clean install | tee mvnci.log"
+alias mvncist="echo mvn clean install -DskipTests=true | tee mvncist.log; mvn clean install -DskipTests=true | tee mvncist.log"
+alias mvndt="echo mvn dependency:tree | tee mvndt.log; mvn dependency:tree | tee mvndt.log"
 alias mvnsrc="echo mvn source:jar install dependency:sources -DskipTests=true; mvn source:jar install dependency:sources -DskipTests=true"
 alias mvnrun="echo mvn compile && mvn exec:java; mvn compile && mvn exec:java"
 mvn-new-version() {
@@ -58,6 +59,7 @@ alias kcv="echo kubectl get VirtualService -A; kubectl get VirtualService -A"
 alias kcs="echo kubectl get services -A; kubectl get services -A"
 alias kcr="echo kubectl get replicasets -A; kubectl get replicasets -A"
 alias kcd="echo kubectl get deployments -A; kubectl get deployments -A"
+alias kce="echo kubectl get endpoints -A; kubectl get endpoints -A"
 
 alias kc-config-docker="export KUBECONFIG=/Users/roy.bailey/.kube/config.docker-desktop; echo kubectl pointing to docker-desktop"
 alias kc-pods="echo kubectl get pods --all-namespaces -o wide; kubectl get pods --all-namespaces -o wide"
@@ -178,11 +180,6 @@ echo JAVA_11_HOME=$JAVA_11_HOME
 java17
 echo
 echo JAVA_HOME=$JAVA_HOME
-
-export LOCAL_POSTGRES_URL=jdbc:postgresql://localhost:5432/postgres
-export LOCAL_POSTGRES_USERNAME=postgres
-export LOCAL_POSTGRES_PASSWORD=localhost
-
 
 # ============================================================
 # Anaconda / Jupyter Notebooks
