@@ -4,7 +4,10 @@
 # description     : Script to do something useful
 # version         : v0.1
 # ============================================================
+# Get the absolute path of the script
+ABSOLUTE_BASEPATH=$(dirname "$(readlink -f "$0")")
 
+echo "Script directory: $ABSOLUTE_BASEPATH"
 
 # ============================================================
 # how to... get some useful variables

@@ -39,6 +39,12 @@ mvn-new-version() {
   echo "mvn versions:set -DnewVersion=$1"
   mvn versions:set -DnewVersion=$1
 }
+git-tag-origin() {
+  echo "git tag $1"
+  git tag $1
+  echo "git push origin tag $1"
+  git push origin tag $1
+}
 
 alias grb="echo gradle build; gradle build"
 alias grd="echo gradle dependencies; gradle dependencies"
@@ -67,6 +73,12 @@ alias kc-all="echo kubectl get all --all-namespaces -o wide; kubectl get all --a
 
 kc-lookup() {
   kubectl get pods | grep $1 | awk '{print $1}' | tee /dev/tty | pbcopy
+}
+kcl() {
+  kc-logs $*
+}
+kclf() {
+  kc-logs -f $*
 }
 kc-logs() {
   KC_LOG_FOLLOW=
@@ -152,6 +164,14 @@ SDKMAN_JAVA_FOLDER=`cd ~/.sdkman/candidates/java/; pwd`
 SDKMAN_JAVA_8=`ls $SDKMAN_JAVA_FOLDER | grep 8.0`
 SDKMAN_JAVA_11=`ls $SDKMAN_JAVA_FOLDER | grep 11.0`
 SDKMAN_JAVA_17=`ls $SDKMAN_JAVA_FOLDER | grep 17.0`
+SDKMAN_JAVA_21=`ls $SDKMAN_JAVA_FOLDER | grep 21.0`
+
+if [ "$SDKMAN_JAVA_21" = "" ]; then
+  echo sdk java v21 not installed, falling back to Java install locations
+  export JAVA_17_HOME=$(/usr/libexec/java_home -v17)
+else
+  export JAVA_21_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_21
+fi
 
 if [ "$SDKMAN_JAVA_17" = "" ]; then
   echo sdk java v17 not installed, falling back to Java install locations
@@ -167,17 +187,20 @@ else
   export JAVA_11_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_11
 fi
 
+alias java21='sdk use java $SDKMAN_JAVA_21;  sdk home java $SDKMAN_JAVA_21'
 alias java17='sdk use java $SDKMAN_JAVA_17;  sdk home java $SDKMAN_JAVA_17'
 alias java11='sdk use java $SDKMAN_JAVA_11;  sdk home java $SDKMAN_JAVA_11'
 
 echo SDKMAN_JAVA_FOLDER=$SDKMAN_JAVA_FOLDER
+echo SDKMAN_JAVA_21=$SDKMAN_JAVA_21
 echo SDKMAN_JAVA_17=$SDKMAN_JAVA_17
 echo SDKMAN_JAVA_11=$SDKMAN_JAVA_11
+echo JAVA_21_HOME=$JAVA_21_HOME
 echo JAVA_17_HOME=$JAVA_17_HOME
 echo JAVA_11_HOME=$JAVA_11_HOME
 
-# default to java11
-java17
+# default to java21
+java21
 echo
 echo JAVA_HOME=$JAVA_HOME
 
