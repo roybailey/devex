@@ -54,7 +54,24 @@ alias npm-global-ls="echo npm -g ls --depth 0; npm -g ls --depth 0"
 alias npm-tape="echo npm run tape; npm run tape"
 alias babel-tape="echo tape -r babel-register; tape -r babel-register"
 
-alias dc-up="docker-compose up"
+alias dcu="docker-compose up"
+alias dcd="docker-compose up"
+
+dcl() {
+  dc-logs $*
+}
+dclf() {
+  dc-logs -f $*
+}
+dc-logs() {
+  DC_LOG_FOLLOW=
+  if [[ "$1" = "-f" ]]; then
+    DC_LOG_FOLLOW=$1
+    shift;
+  fi
+  # shellcheck disable=SC2046
+  docker logs $DC_LOG_FOLLOW $(docker ps $2 $3 $4 $5 $6 | grep $1 | awk '{print $1}') $2 $3 $4 $5 $6
+}
 
 alias kc=kubectl
 alias kca="echo kubectl get all -A; kubectl get all -A"
