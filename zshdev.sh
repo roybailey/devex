@@ -141,6 +141,8 @@ PATH=$PATH:$SCRIPTDIR/bin; export PATH;
 # Gradle (brew install gradle - /usr/local/bin/gradle)
 # nvm (brew install nvm; mkdir ~/.nvm)
 # ============================================================
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 if ! command -v brew &> /dev/null; then
     echo "brew not found, see https://brew.sh/"
 fi
