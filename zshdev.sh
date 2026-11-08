@@ -184,6 +184,14 @@ SDKMAN_JAVA_8=`ls $SDKMAN_JAVA_FOLDER | grep 8.0`
 SDKMAN_JAVA_11=`ls $SDKMAN_JAVA_FOLDER | grep 11.0`
 SDKMAN_JAVA_17=`ls $SDKMAN_JAVA_FOLDER | grep 17.0`
 SDKMAN_JAVA_21=`ls $SDKMAN_JAVA_FOLDER | grep 21.0`
+SDKMAN_JAVA_25=`ls $SDKMAN_JAVA_FOLDER | grep 25.0`
+
+if [ "$SDKMAN_JAVA_25" = "" ]; then
+  echo sdk java v25 not installed, falling back to Java install locations
+  export JAVA_21_HOME=$(/usr/libexec/java_home -v21)
+else
+  export JAVA_25_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_25
+fi
 
 if [ "$SDKMAN_JAVA_21" = "" ]; then
   echo sdk java v21 not installed, falling back to Java install locations
@@ -206,22 +214,32 @@ else
   export JAVA_11_HOME=$SDKMAN_JAVA_FOLDER/$SDKMAN_JAVA_11
 fi
 
+alias java25='sdk use java $SDKMAN_JAVA_25;  sdk home java $SDKMAN_JAVA_25'
 alias java21='sdk use java $SDKMAN_JAVA_21;  sdk home java $SDKMAN_JAVA_21'
 alias java17='sdk use java $SDKMAN_JAVA_17;  sdk home java $SDKMAN_JAVA_17'
 alias java11='sdk use java $SDKMAN_JAVA_11;  sdk home java $SDKMAN_JAVA_11'
 
 echo SDKMAN_JAVA_FOLDER=$SDKMAN_JAVA_FOLDER
+echo SDKMAN_JAVA_25=$SDKMAN_JAVA_25
 echo SDKMAN_JAVA_21=$SDKMAN_JAVA_21
 echo SDKMAN_JAVA_17=$SDKMAN_JAVA_17
 echo SDKMAN_JAVA_11=$SDKMAN_JAVA_11
+echo JAVA_25_HOME=$JAVA_25_HOME
 echo JAVA_21_HOME=$JAVA_21_HOME
 echo JAVA_17_HOME=$JAVA_17_HOME
 echo JAVA_11_HOME=$JAVA_11_HOME
 
-# default to java21
-java21
+# default to java25
+java25
 echo
 echo JAVA_HOME=$JAVA_HOME
+
+
+# ============================================================
+# Add Visual Studio Code (code)
+# ============================================================
+export PATH=$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin
+
 
 # ============================================================
 # Anaconda / Jupyter Notebooks
